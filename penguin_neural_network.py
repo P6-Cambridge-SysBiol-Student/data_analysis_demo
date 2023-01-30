@@ -3,6 +3,8 @@
 
 import numpy as np
 import pandas as pd
+import tensorflow as ts
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from keras.models import Sequential
@@ -27,7 +29,7 @@ print(data_types)
 from sklearn.preprocessing import LabelEncoder
 
 pen_df_numeric = penguin_df
-for (column) in pen_df_numeric:  # iterate over columns, converting to numeric is needed
+for column in pen_df_numeric:  # iterate over columns, converting to numeric is needed
     if pen_df_numeric[column].dtype == "object" or "category":
         # Fit the LabelEncoder to the column and transform it
         encoder = LabelEncoder()
@@ -56,17 +58,26 @@ penguin_nn.add(Dense(10, activation="relu"))
 penguin_nn.add(Dense(10, activation="relu"))
 penguin_nn.add(Dense(3, activation="softmax"))
 penguin_nn.compile(
-    loss="categorical_crossentropy",
-    optimizer="adam",
-    metrics=["accuracy"]
+    loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"]
 )
 
 # Fit the model on the training data
-history = model.fit(
+penguin_nn_his = penguin_nn.fit(
     predictors_train,
-    outcome_train_train,
+    outcome_train,
     epochs=100,
     batch_size=32,
-    validation_data=(predictors_test_test, outcome_test_test),
+    validation_data=(predictors_test, outcome_test),
 )
 
+# Defining a function to plot loss over time of models
+def plot_loss(example_history):
+    plt.plot(example_history.history["loss"])
+    plt.plot(example_history.history["val_loss"])
+    plt.title("Model Loss")
+    plt.ylabel("Loss")
+    plt.xlabel("Epoch")
+    plt.legend(["Training Loss", "Validation Loss"], loc="upper right")
+    plt.show()
+
+plot_loss(penguin_nn_his)
