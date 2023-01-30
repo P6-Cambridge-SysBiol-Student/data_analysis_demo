@@ -46,6 +46,12 @@ predictors_train, predictors_test, outcome_train, outcome_test = train_test_spli
     predictors, outcome, test_size=0.2, random_state=3
 )
 
+# Convert target variable to one-hot encoded categorical variable
+from keras.utils import to_categorical
+
+outcome_train = to_categorical(outcome_train)
+outcome_test = to_categorical(outcome_test)
+
 # Normalise the input data
 scaler = StandardScaler()
 predictors_train = scaler.fit_transform(predictors_train)
@@ -81,3 +87,7 @@ def plot_loss(example_history):
     plt.show()
 
 plot_loss(penguin_nn_his)
+
+from keras.utils import plot_model
+
+plot_model(penguin_nn, to_file='model.png', show_shapes=True)
